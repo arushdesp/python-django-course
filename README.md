@@ -321,3 +321,126 @@ Inheritance: Allows a class to inherit behavior from a parent class.
 Encapsulation: Hides the internal representation of the object.
 Polymorphism: The same operation works differently on different classes.
 Abstraction: Focuses on essential qualities rather than specific details.
+
+
+## Django Installation.
+
+<code> python -m pip install Django </code>
+
+To check if instsalled.
+<code> python -m django --version </code>
+
+This is to create a project that is the general setup which can have more than 1 applications
+django-admin startproject mysite 
+
+This is created down:
+
+<code>
+mysite/
+    manage.py
+    mysite/
+        __init__.py
+        settings.py
+        urls.py
+        asgi.py
+        wsgi.py
+</code>
+These files are:
+
+- The outer mysite/ root directory is a container for your project. Its name doesn’t matter to Django; you can rename it to anything you like.
+- manage.py: A command-line utility that lets you interact with this Django project in various ways. You can read all the details about manage.py in django-admin and manage.py.
+- The inner mysite/ directory is the actual Python package for your project. Its name is the Python package name you’ll need to use to import anything inside it (e.g. mysite.urls).
+- mysite/__init__.py: An empty file that tells Python that this directory should be considered a Python package. If you’re a Python beginner, read more about packages in the official Python docs.
+- mysite/settings.py: Settings/configuration for this Django project. Django settings will tell you all about how settings work.
+mysite/urls.py: The URL declarations for this Django project; a “table of contents” of your Django-powered site. You can read more about URLs in URL dispatcher.
+- mysite/asgi.py: An entry-point for ASGI-compatible web servers to serve your project. See How to deploy with ASGI for more details.
+- mysite/wsgi.py: An entry-point for WSGI-compatible web servers to serve your project. See How to deploy with WSGI for more details.
+
+ Change into the outer mysite directory, if you haven’t already, and run the following commands:
+<code> python manage.py runserver </code>
+<code>
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have unapplied migrations; your app may not work properly until they are applied.
+Run 'python manage.py migrate' to apply them.
+
+September 16, 2024 - 15:50:53
+Django version 5.1, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+</code>
+
+
+<br>Creating the Polls app</br>
+Now that your environment – a “project” – is set up, you’re set to start doing work.
+
+Each application you write in Django consists of a Python package that follows a certain convention. Django comes with a utility that automatically generates the basic directory structure of an app, so you can focus on writing code rather than creating directories.
+
+Projects vs. apps
+
+What’s the difference between a project and an app? An app is a web application that does something – e.g., a blog system, a database of public records or a small poll app. A project is a collection of configuration and apps for a particular website. A project can contain multiple apps. An app can be in multiple projects.
+
+<code> python manage.py startapp polls </code>
+
+<code>
+polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+</code>
+
+Write your first view¶
+- Let’s write the first view. Open the file polls/views.py and put the following Python code in it:
+
+polls/views.py¶
+<code>
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+</code>
+This is the most basic view possible in Django. To access it in a browser, we need to map it to a URL - and for this we need to define a URL configuration, or “URLconf” for short. These URL configurations are defined inside each Django app, and they are Python files named urls.py. 
+
+To define a URLconf for the polls app, create a file polls/urls.py with the following content:
+<code>
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+  path("",views.index,name="index)
+  ]
+</code>
+
+Your app directory should now look like:
+<code>
+polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    urls.py
+    views.py
+</code>
+The next step is to configure the global URLconf in the mysite project to include the URLconf defined in polls.urls. To do this, add an import for django.urls.include in mysite/urls.py and insert an include() in the urlpatterns list, so you have:
+<code>
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path("polls/", include("polls.urls")),
+    path("admin/", admin.site.urls),
+]
+
+</code>
+
